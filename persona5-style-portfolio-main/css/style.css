@@ -10,11 +10,20 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html,
 body {
   height: 100%;
+}
+
+@supports (height: 100dvh) {
+
+  html,
+  body {
+    height: 100dvh;
+  }
 }
 
 body {
@@ -24,6 +33,11 @@ body {
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
   user-select: none;
+}
+
+a,
+button {
+  touch-action: manipulation;
 }
 
 .display {
@@ -186,6 +200,8 @@ body[data-screen]:not([data-screen="home"]) #slash {
   display: none;
   overflow-y: auto;
   overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: var(--red) transparent;
 }
@@ -211,7 +227,7 @@ body[data-screen]:not([data-screen="home"]) #slash {
 #screen-home.active {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: safe center;
 }
 
 #intro-eyebrow {
@@ -1324,6 +1340,196 @@ body.has-art-home #big-name .ch:not(.box):not(.boxw) {
 
   .cursor-mark {
     right: -34px;
+  }
+}
+
+/* ============ MOBILE / TOUCH ============ */
+/* Touch devices: keyboard-only chrome is pointless. Hide the hints and let
+   text be selectable again (body sets user-select:none for the console feel). */
+@media (pointer:coarse),
+(hover:none) {
+
+  .hint,
+  .kbd-hint {
+    display: none;
+  }
+
+  body {
+    user-select: text;
+    -webkit-user-select: text;
+  }
+
+  .cursor-mark {
+    display: none;
+  }
+
+  #hud-bottom {
+    justify-content: flex-end;
+    padding: 0 14px 12px;
+  }
+}
+
+@media (max-width:640px) {
+
+  /* tighten the frame */
+  #hud-top {
+    padding: 12px 14px 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .hud-tag {
+    font-size: 11px;
+    padding: 4px 10px;
+  }
+
+  #hud-bottom {
+    padding: 0 14px 12px;
+    gap: 10px;
+    font-size: 11px;
+  }
+
+  .screen {
+    padding: 1.5vh 5vw;
+  }
+
+  /* HOME */
+  #screen-home {
+    padding: 0 6vw;
+  }
+
+  #big-name {
+    margin-bottom: 2vh;
+  }
+
+  #big-name .ransom {
+    font-size: clamp(38px, 11.5vw, 52px);
+  }
+
+  #tagline {
+    font-size: 14.5px;
+    line-height: 1.4;
+    padding: 10px 14px;
+    max-width: 100%;
+  }
+
+  #menu {
+    margin-top: 2.5vh;
+    gap: .8vh;
+  }
+
+  .menu-item .ransom {
+    font-size: clamp(24px, 7.4vw, 34px);
+  }
+
+  .menu-item.sel {
+    transform: translateX(10px) !important;
+  }
+
+  /* SUB-SCREEN HEADER */
+  .sub .screen-head {
+    margin: .5vh 0 3vh;
+  }
+
+  .sub .screen-head .ransom {
+    font-size: clamp(30px, 10vw, 46px);
+  }
+
+  .back-hint {
+    margin-left: 12px;
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+
+  /* GRIDS — single column, no horizontal scroll */
+  .grid,
+  #feat-grid,
+  #repo-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .grid {
+    gap: 22px;
+  }
+
+  /* SKILLS — stack name / bar on their own lines */
+  .skill-group {
+    margin-bottom: 4vh;
+  }
+
+  .skill-row {
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 10px;
+  }
+
+  .skill-row .name {
+    width: calc(100% - 74px);
+    font-size: 14px;
+  }
+
+  .skill-row .lv {
+    width: 64px;
+  }
+
+  .skill-bar {
+    flex-basis: 100%;
+    max-width: none;
+    height: 18px;
+  }
+
+  /* PAPER / ABOUT / CONTACT */
+  .paper {
+    padding: 20px 16px;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .about-photo {
+    float: none;
+    display: block;
+    width: 100%;
+    max-width: 240px;
+    margin: 0 auto 16px;
+  }
+
+  .contact-chip {
+    font-size: 16px;
+    padding: 12px 20px;
+  }
+
+  .contact-list {
+    gap: 14px;
+  }
+
+  /* FORM — bigger touch targets; keep inputs at 16px so iOS doesn't zoom */
+  .field {
+    margin-bottom: 16px;
+  }
+
+  .field input,
+  .field textarea {
+    padding: 12px 14px;
+  }
+
+  /* TOUCH FEEDBACK for things that were hover-only */
+  .card:active {
+    transform: rotate(0) scale(.985) !important;
+    filter: drop-shadow(6px 6px 0 var(--black));
+  }
+
+  .back-hint:active,
+  .contact-chip:active {
+    background: var(--red);
+    color: var(--white);
+  }
+
+  /* let the hero art sit lower behind the content on phones */
+  #hero-art {
+    height: 50vh;
+    max-width: 62vw;
+    opacity: .32;
   }
 }
 
