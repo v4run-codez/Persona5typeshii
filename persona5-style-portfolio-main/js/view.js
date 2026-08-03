@@ -8,16 +8,16 @@ const View = {
   reducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
 
   els: {
-    screens:    {},   // filled in init()
-    menuItems:  [],
-    wipe:       document.getElementById("wipe"),
-    featGrid:   document.getElementById("feat-grid"),
-    repoGrid:   document.getElementById("repo-grid"),
+    screens: {},   // filled in init()
+    menuItems: [],
+    wipe: document.getElementById("wipe"),
+    featGrid: document.getElementById("feat-grid"),
+    repoGrid: document.getElementById("repo-grid"),
     repoStatus: document.getElementById("repo-status"),
     skillsBody: document.getElementById("skills-body"),
-    sfx:        document.getElementById("sfx-select"),
-    cursor:     document.getElementById("cursor"),
-    clock:      document.getElementById("clock"),
+    sfx: document.getElementById("sfx-select"),
+    cursor: document.getElementById("cursor"),
+    clock: document.getElementById("clock"),
   },
 
   init() {
@@ -91,8 +91,8 @@ const View = {
     try {
       this.els.sfx.currentTime = 0;
       const p = this.els.sfx.play();
-      if (p && p.catch) p.catch(() => {});  // blocked before first user gesture — fine
-    } catch {}
+      if (p && p.catch) p.catch(() => { });  // blocked before first user gesture — fine
+    } catch { }
   },
 
   /* ---------- Project cards ---------- */
@@ -181,7 +181,7 @@ const View = {
   startClock() {
     setInterval(() => {
       this.els.clock.textContent =
-        new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) + " · LDN";
+        new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) + " · IN";
     }, 1000);
   },
 
