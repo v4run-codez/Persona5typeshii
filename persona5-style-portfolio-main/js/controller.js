@@ -77,74 +77,74 @@ const Controller = {
   },
 
   select(index) {
-    const n = View.els.menuItems.length;
-    const next = (index + n) % n;
-    if (next !== Model.state.menuIndex) this.play();
-    Model.state.menuIndex = next;
-    View.setMenuSelection(next);
-  },
+  const n = View.els.menuItems.length;
+  const next = (index + n) % n;
+  if (next !== Model.state.menuIndex) this.play();
+  Model.state.menuIndex = next;
+  View.setMenuSelection(next);
+},
 
   /* ---------- Screen data loading ---------- */
   async loadProjects() {
-    View.renderFeatured(Model.featured);
-    if (Model.state.reposLoaded) return;
-    const { repos, live } = await Model.fetchRepos();
-    const status = live
-      ? `${repos.length} repositories · live from GitHub`
-      : "Showing pinned work · GitHub API unavailable right now";
-    View.renderRepos(repos, status, Model);
-    Model.state.reposLoaded = true;
-  },
+  View.renderFeatured(Model.featured);
+  if (Model.state.reposLoaded) return;
+  const { repos, live } = await Model.fetchRepos();
+  const status = live
+    ? `${repos.length} repositories · live from GitHub`
+    : "Showing pinned work · GitHub API unavailable right now";
+  View.renderRepos(repos, status, Model);
+  Model.state.reposLoaded = true;
+},
 
-  loadSkills() {
-    if (!Model.state.skillsBuilt) {
-      View.renderSkills(Model.skills);
-      Model.state.skillsBuilt = true;
-    }
-    View.animateSkillBars();
-  },
+loadSkills() {
+  if (!Model.state.skillsBuilt) {
+    View.renderSkills(Model.skills);
+    Model.state.skillsBuilt = true;
+  }
+  View.animateSkillBars();
+},
 
-  /* ---------- Sound (browsers block audio until first user gesture) ---------- */
-  play() {
-    if (this.audioUnlocked) View.playSelect();
-  },
+/* ---------- Sound (browsers block audio until first user gesture) ---------- */
+play() {
+  if (this.audioUnlocked) View.playSelect();
+},
 
-  bindAudioUnlock() {
-    const unlock = () => { this.audioUnlocked = true; };
-    addEventListener("pointerdown", unlock, { once: true, capture: true });
-    addEventListener("keydown", unlock, { once: true, capture: true });
-  },
+bindAudioUnlock() {
+  const unlock = () => { this.audioUnlocked = true; };
+  addEventListener("pointerdown", unlock, { once: true, capture: true });
+  addEventListener("keydown", unlock, { once: true, capture: true });
+},
 
-  /* ---------- Input bindings ---------- */
-  bindMenu() {
-    View.els.menuItems.forEach((item, i) => {
-      item.addEventListener("mouseenter", () => this.select(i));
-      item.addEventListener("click", () => this.goTo(item.dataset.target));
-    });
+/* ---------- Input bindings ---------- */
+bindMenu() {
+  View.els.menuItems.forEach((item, i) => {
+    item.addEventListener("mouseenter", () => this.select(i));
+    item.addEventListener("click", () => this.goTo(item.dataset.target));
+  });
 
-    document.querySelectorAll("[data-back]").forEach(b =>
-      b.addEventListener("click", () => this.goTo("home")));
+  document.querySelectorAll("[data-back]").forEach(b =>
+    b.addEventListener("click", () => this.goTo("home")));
 
-    // Clicking the name always takes you home
-    document.getElementById("big-name").addEventListener("click", () => {
-      if (Model.state.screen !== "home") this.goTo("home");
-      else this.play();
-    });
-  },
+  // Clicking the name always takes you home
+  document.getElementById("big-name").addEventListener("click", () => {
+    if (Model.state.screen !== "home") this.goTo("home");
+    else this.play();
+  });
+},
 
-  bindKeyboard() {
-    addEventListener("keydown", e => {
-      if (Model.state.screen === "home") {
-        if (e.key === "ArrowDown") { this.select(Model.state.menuIndex + 1); e.preventDefault(); }
-        else if (e.key === "ArrowUp") { this.select(Model.state.menuIndex - 1); e.preventDefault(); }
-        else if (e.key === "Enter") {
-          this.goTo(View.els.menuItems[Model.state.menuIndex].dataset.target);
-        }
-      } else if (e.key === "Escape") {
-        this.goTo("home");
+bindKeyboard() {
+  addEventListener("keydown", e => {
+    if (Model.state.screen === "home") {
+      if (e.key === "ArrowDown") { this.select(Model.state.menuIndex + 1); e.preventDefault(); }
+      else if (e.key === "ArrowUp") { this.select(Model.state.menuIndex - 1); e.preventDefault(); }
+      else if (e.key === "Enter") {
+        this.goTo(View.els.menuItems[Model.state.menuIndex].dataset.target);
       }
-    });
-  },
+    } else if (e.key === "Escape") {
+      this.goTo("home");
+    }
+  });
+},
 };
 
 Controller.init();
